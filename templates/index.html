@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informasi Kegiatan</title>
+</head>
+
+<body>
+  <h2>Informasi Kegiatan Kota Semarang</h2>
+
+  <!-- FORM SEARCH -->
+  <form method="get" action="/">
+    <input 
+      type="text" 
+      name="q" 
+      placeholder="Cari nama kegiatan..."
+      value="{{ keyword or '' }}"
+    >
+    <button type="submit">Cari</button>
+    <a href="/">Reset</a>
+  </form>
+
+  <br>
+
+  <!-- LIST KEGIATAN -->
+  <ul>
+    {% for k in data %}
+      <li>
+        <strong>{{ k.nama_kegiatan }}</strong><br>
+        {{ k.deskripsi }}<br>
+        {{ k.tanggal }} - {{ k.lokasi }}
+      </li>
+      <br>
+    {% else %}
+      <li>Data tidak ditemukan</li>
+    {% endfor %}
+  </ul>
+
+</body>
+
+</html>

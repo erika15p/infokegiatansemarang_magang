@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <h2>Dashboard Admin</h2>
+  <a href="/logout">Logout</a>
+
+  <form method="post" action="/tambah">
+    <input name="nama" placeholder="Nama kegiatan"><br>
+    <input name="deskripsi" placeholder="Deskripsi kegiatan"><br>
+    <input type="date" name="tanggal"><br>
+    <input name="lokasi" placeholder="Lokasi"><br>
+    <button type="submit">Tambah</button>
+  </form>
+
+  <hr>
+
+  <ul>
+    {% for k in data %}
+    <li>{{ k.nama_kegiatan }} - {{ k.deskripsi }} - {{ k.tanggal }} - {{ k.lokasi }}</li>
+    {% endfor %}
+  </ul>
+
+</body>
+
+</html>
