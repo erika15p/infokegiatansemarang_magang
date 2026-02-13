@@ -1,21 +1,239 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin - Info Kegiatan Semarang</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            max-width: 450px;
+            width: 100%;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .login-header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .login-header p {
+            font-size: 0.95em;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .login-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .login-body {
+            padding: 40px 35px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            background: #fee;
+            border-left: 4px solid #f44336;
+            color: #c62828;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-link a:hover {
+            color: #764ba2;
+            gap: 12px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @media (max-width: 480px) {
+            .login-header h1 {
+                font-size: 1.6em;
+            }
+            
+            .login-body {
+                padding: 30px 25px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <h2>Login Admin</h2>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-icon">🔐</div>
+            <h1>Login Admin</h1>
+            <p>Info Kegiatan Semarang</p>
+        </div>
+        
+        <div class="login-body">
+            {% if error %}
+            <div class="error-message">
+                ⚠️ {{ error }}
+            </div>
+            {% endif %}
 
-  <form method="post">
-    <input name="username" placeholder="Username"><br><br>
-    <input type="password" name="password" placeholder="Password"><br><br>
-    <button type="submit">Login</button>
-  </form>
+            <form method="post">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input 
+                        type="text" 
+                        class="form-input" 
+                        id="username"
+                        name="username" 
+                        placeholder="Masukkan username"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
 
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input 
+                        type="password" 
+                        class="form-input" 
+                        id="password"
+                        name="password" 
+                        placeholder="Masukkan password"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <button type="submit" class="login-btn">
+                    🔓 Masuk ke Dashboard
+                </button>
+            </form>
+
+            <div class="back-link">
+                <a href="/">← Kembali ke Beranda</a>
+            </div>
+        </div>
+    </div>
 </body>
-
 </html>
