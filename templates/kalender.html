@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kalender Kegiatan Kota Semarang</title>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20 px;
+    }
+    #calendar {
+      max-width: 900 px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Kalender Kegiatan Kota Semarang</h2>
+  <div id="calendar"></div>
+
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+  var calendarEl = document.getElementById('calendar');
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+
+    events: '/api/kegiatan',
+
+    eventDidMount: function(info) {
+      // Tooltip saat hover
+      info.el.setAttribute("title", info.event.extendedProps.description);
+    },
+
+    eventClick: function(info) {
+      info.jsEvent.preventDefault(); // supaya tidak reload
+      if (info.event.url) {
+        window.location.href = info.event.url;
+      }
+    }
+  });
+
+  calendar.render();
+});
+</script>
+
+</body>
+</html>
