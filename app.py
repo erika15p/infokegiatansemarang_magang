@@ -101,12 +101,29 @@ def api_kegiatan():
         events.append({
             "id": k["id_kegiatan"],
             "title": k["nama_kegiatan"],
-            "start": k["tanggal"].strftime("%Y-%m-%d"),
-            "location": k["lokasi"],
-            "description": k["deskripsi"]
+            "start": str(k["tanggal"]),  # lebih aman daripada strftime
+            "extendedProps": {
+                "location": k["lokasi"],
+                "description": k["deskripsi"]
+            },
+            "url": f"/kegiatan/{k['id_kegiatan']}"
         })
 
     return jsonify(events)
+
+@app.route("/kegiatan/<int:id>")
+def detail_kegiatan(id):
+    db = get_db()
+    cur = db.cursor(dictionary=True)
+
+    cur.execute("SELECT * FROM kegiatan WHERE id_kegiatan=%s", (id,))
+    kegiatan = cur.fetchone()
+
+    if not kegiatan:
+        return "Kegiatan tidak ditemukan"
+
+    return render_template("detail_kegiatan.html", kegiatan=kegiatan)
+
 
 @app.route("/logout")
 def logout():
