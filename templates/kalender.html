@@ -31,12 +31,12 @@ document.addEventListener('DOMContentLoaded', function () {
     events: '/api/kegiatan',
 
     eventDidMount: function(info) {
-      // Tooltip saat hover
+
       info.el.setAttribute("title", info.event.extendedProps.description);
     },
 
     eventClick: function(info) {
-      info.jsEvent.preventDefault(); // supaya tidak reload
+      info.jsEvent.preventDefault();
       if (info.event.url) {
         window.location.href = info.event.url;
       }
