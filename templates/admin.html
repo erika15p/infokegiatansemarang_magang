@@ -24,7 +24,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         .header {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
@@ -113,7 +112,6 @@
             color: white;
         }
 
-        /* Form Section */
         .form-section {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
@@ -191,7 +189,6 @@
             box-shadow: 0 10px 25px rgba(220, 20, 60, 0.4);
         }
 
-        /* Table Section */
         .table-section {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
@@ -281,7 +278,6 @@
             margin-bottom: 10px;
         }
 
-        /* Badge Styles */
         .date-badge {
             background: #FFD700;
             color: #333;
@@ -303,7 +299,6 @@
             display: inline-block;
         }
 
-        /* Alert Messages */
         .alert {
             padding: 15px 20px;
             border-radius: 15px;
@@ -368,7 +363,6 @@
 
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <div class="header-left">
                 <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Kota Semarang" class="logo">
@@ -397,7 +391,7 @@
 
         <div class="form-section">
             <h2>➕ Tambah Kegiatan Baru</h2>
-            <form method="post" action="/tambah">
+            <form method="post" action="/tambah" enctype="multipart/form-data">
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label">📝 Nama Kegiatan</label>
@@ -419,6 +413,12 @@
                     <textarea class="form-textarea" name="deskripsi" placeholder="Jelaskan detail kegiatan..."
                         required></textarea>
                 </div>
+                <div class="form-group">
+                    <label class="form-label">📸 Gambar</label>
+                    <input type="file" class="form-input" name="gambar" accept="image/*"> <br>
+                    <button type="submit">Pilih File</button>
+                </div>
+
                 <button type="submit" class="btn-submit">
                     ✨ Tambahkan Kegiatan
                 </button>
@@ -439,6 +439,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Gambar</th>
                             <th>Nama Kegiatan</th>
                             <th>Deskripsi</th>
                             <th>Tanggal</th>
@@ -448,7 +449,15 @@
                     <tbody>
                         {% for k in data %}
                         <tr>
-                            <td><strong>{{ loop.index }}</strong></td>
+                            <td><strong>{{ loop.index }}</strong></td>\
+                            <td>
+                                {% if k.gambar %}
+                                <img src="{{ url_for('static', filename='file_uploads/' + k.gambar) }}" width="80"
+                                    style="border-radius:8px;">
+                                {% else %}
+                                <span style="color:gray;">Tidak ada gambar</span>
+                                {% endif %}
+                            </td>
                             <td><strong>{{ k.nama_kegiatan }}</strong></td>
                             <td>{{ k.deskripsi }}</td>
                             <td><span class="date-badge">📅 {{ k.tanggal }}</span></td>
@@ -469,7 +478,6 @@
     </div>
 
     <script>
-        // Auto hide alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function () {
             const alerts = document.querySelectorAll('.alert');
             alerts.forEach(alert => {

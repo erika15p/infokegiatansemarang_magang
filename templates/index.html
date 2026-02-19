@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,8 +51,15 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         .header h1 {
@@ -243,7 +251,6 @@
             box-shadow: 0 5px 15px rgba(220, 20, 60, 0.3);
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.8em;
@@ -267,14 +274,13 @@
                 width: 60px;
                 height: 60px;
             }
-            
+
             .logo-container {
                 flex-direction: column;
                 gap: 15px;
             }
         }
 
-        /* Loading Animation */
         .loading {
             text-align: center;
             padding: 40px;
@@ -292,37 +298,35 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <!-- Header with Logo -->
         <div class="header">
             <div class="logo-container">
-                <!-- Logo Kota Semarang Kiri -->
                 <img src="/static/logo.png" alt="Logo Kota Semarang" class="logo">
-                
+
                 <div>
                     <h1>Info Kegiatan Semarang</h1>
                     <p>Temukan berbagai kegiatan menarik di Kota Semarang</p>
                 </div>
-                
+
             </div>
         </div>
 
-        <!-- Search Section -->
         <div class="search-section">
             <form id="searchForm" class="search-container">
-                <input 
-                    type="text" 
-                    class="search-input" 
-                    id="searchInput"
-                    placeholder="🔍 Cari nama kegiatan..." 
-                    name="keyword"
-                >
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 Cari nama kegiatan..."
+                    name="keyword">
                 <button type="submit" class="search-btn">Cari</button>
             </form>
             <button class="reset-btn" onclick="resetSearch()">
@@ -330,7 +334,6 @@
             </button>
         </div>
 
-        <!-- Events List Section -->
         <div class="events-section">
             <div class="events-header">
                 <h2>
@@ -341,7 +344,6 @@
             </div>
 
             <div id="eventsList">
-                <!-- Event cards will be loaded here -->
                 <div class="loading">
                     <div class="spinner"></div>
                     <p>Memuat data kegiatan...</p>
@@ -351,85 +353,69 @@
     </div>
 
     <script>
-        // Sample data - replace with actual API call
-        const sampleEvents = [
-            {
-                id: 1,
-                title: "Festival Budaya Semarang 2026",
-                date: "20 Februari 2026",
-                location: "Simpang Lima",
-                description: "Perayaan budaya lokal dengan berbagai pertunjukan seni dan kuliner khas Semarang"
-            },
-            {
-                id: 2,
-                title: "Car Free Day - Minggu Pagi",
-                date: "16 Februari 2026",
-                location: "Jl. Pandanaran",
-                description: "Kegiatan olahraga dan hiburan keluarga setiap hari Minggu pagi"
+        async function fetchEvents(keyword = "") {
+            try {
+                const response = await fetch(`/api/list_kegiatan?keyword=${keyword}`);
+                const events = await response.json();
+                loadEvents(events);
+            } catch (error) {
+                console.error("Error:", error);
             }
-        ];
+        }
 
-        function loadEvents(events = sampleEvents) {
+        function loadEvents(events) {
             const eventsList = document.getElementById('eventsList');
             const eventCount = document.getElementById('eventCount');
-            
+
             if (events.length === 0) {
                 eventsList.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <h3>Tidak ada kegiatan ditemukan</h3>
-                        <p>Coba ubah kata kunci pencarian Anda</p>
-                    </div>
-                `;
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    <h3>Tidak ada kegiatan ditemukan</h3>
+                </div>
+            `;
                 eventCount.textContent = '0 Kegiatan Ditemukan';
                 return;
             }
 
             eventCount.textContent = `${events.length} Kegiatan Ditemukan`;
-            
+
             eventsList.innerHTML = events.map(event => `
-                <div class="event-card">
-                    <div class="event-title">${event.title}</div>
-                    <div class="event-details">
-                        📅 ${event.date} | 📍 ${event.location}
-                    </div>
-                    <div class="event-details">
-                        ${event.description}
-                    </div>
-                    <div class="event-actions">
-                        <a href="/detail/${event.id}" class="btn btn-detail">Lihat Detail</a>
-                    </div>
+            <div class="event-card">
+                ${event.gambar ? `
+                    <img src="/static/file_uploads/${event.gambar}" 
+                         style="width:100%; max-height:200px; object-fit:cover; border-radius:10px; margin-bottom:15px;">
+                ` : ""}
+
+                <div class="event-title">${event.nama_kegiatan}</div>
+                <div class="event-details">
+                    📅 ${event.tanggal} | 📍 ${event.lokasi}
                 </div>
-            `).join('');
+                <div class="event-details">
+                    ${event.deskripsi}
+                </div>
+                <div class="event-actions">
+                    <a href="/kegiatan/${event.id_kegiatan}" class="btn btn-detail">
+                        Lihat Detail
+                    </a>
+                </div>
+            </div>
+        `).join('');
         }
 
         function resetSearch() {
             document.getElementById('searchInput').value = '';
-            loadEvents(sampleEvents);
+            fetchEvents();
         }
 
-        // Search functionality
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
+        document.getElementById('searchForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            const keyword = document.getElementById('searchInput').value.toLowerCase();
-            
-            if (keyword.trim() === '') {
-                loadEvents(sampleEvents);
-                return;
-            }
-
-            const filtered = sampleEvents.filter(event => 
-                event.title.toLowerCase().includes(keyword) ||
-                event.description.toLowerCase().includes(keyword) ||
-                event.location.toLowerCase().includes(keyword)
-            );
-            
-            loadEvents(filtered);
+            const keyword = document.getElementById('searchInput').value;
+            fetchEvents(keyword);
         });
 
-        // Load events on page load
-        setTimeout(() => {
-            loadEvents(sampleEvents);
-        }, 500);
+        fetchEvents();
     </script>
+
 </body>
+
 </html>

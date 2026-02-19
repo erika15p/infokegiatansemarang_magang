@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Detail Kegiatan</title>
+  <title>Detail Kegiatan</title>
 </head>
+
 <body>
 
-<h2>{{ kegiatan.nama_kegiatan }}</h2>
+  <h2>{{ kegiatan.nama_kegiatan }}</h2>
 
-<p><b>Tanggal:</b> {{ kegiatan.tanggal }}</p>
-<p><b>Lokasi:</b> {{ kegiatan.lokasi }}</p>
-<p><b>Deskripsi:</b></p>
-<p>{{ kegiatan.deskripsi }}</p>
+  {% if kegiatan.gambar %}
+  <img src="{{ url_for('static', filename='file_uploads/' + kegiatan.gambar) }}" width="300">
+  {% endif %}
 
-<br>
-<a href="/kalender">Kembali ke Kalender</a>
+  <p><b>Tanggal:</b> {{ kegiatan.tanggal }}</p>
+  <p><b>Lokasi:</b> {{ kegiatan.lokasi }}</p>
+  <p><b>Deskripsi:</b></p>
+  <p>{{ kegiatan.deskripsi }}</p>
 
 </body>
+
 </html>

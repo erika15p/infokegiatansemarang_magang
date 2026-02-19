@@ -1,11 +1,16 @@
 from flask import Flask, render_template, request, redirect, session
-from flask import jsonify
+from flask import jsonify, redirect
 from db import get_db
 from kalender_api import tambah_event as kegiatan
 from kalender_api import ambil_event_kalender
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = "infokegiatan-secret"
+
+UPLOAD_FOLDER = "static/file_uploads"
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 @app.route("/")
 def index():
@@ -68,13 +73,20 @@ def tambah():
     lokasi = request.form.get("lokasi")
     deskripsi = request.form.get("deskripsi")
 
+    file = request.files.get("gambar")
+    filename = None
+
+    if file and file.filename != "":
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+
     event_id = kegiatan(nama, deskripsi, tanggal, lokasi)
     
     db = get_db()
     cur = db.cursor()
     cur.execute(
-        "INSERT INTO kegiatan (nama_kegiatan, tanggal, lokasi, deskripsi, calendar_event_id) VALUES (%s,%s,%s,%s,%s)",
-        (nama, tanggal, lokasi, deskripsi, event_id)
+        "INSERT INTO kegiatan (nama_kegiatan, tanggal, lokasi, deskripsi, calendar_event_id, gambar) VALUES (%s,%s,%s,%s,%s,%s)",
+        (nama, tanggal, lokasi, deskripsi, event_id, filename)
     )
     db.commit()
 
@@ -110,6 +122,26 @@ def api_kegiatan():
         })
 
     return jsonify(events)
+
+@app.route("/api/list_kegiatan")
+def list_kegiatan():
+    keyword = request.args.get("keyword", "")
+
+    db = get_db()
+    cur = db.cursor(dictionary=True)
+
+    if keyword:
+        cur.execute("""
+            SELECT * FROM kegiatan
+            WHERE nama_kegiatan LIKE %s
+            OR deskripsi LIKE %s
+            OR lokasi LIKE %s
+        """, (f"%{keyword}%", f"%{keyword}%", f"%{keyword}%"))
+    else:
+        cur.execute("SELECT * FROM kegiatan")
+
+    data = cur.fetchall()
+    return jsonify(data)
 
 @app.route("/kegiatan/<int:id>")
 def detail_kegiatan(id):
