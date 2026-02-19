@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin - Info Kegiatan Semarang</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,8 +13,8 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #DC143C 0%, #FFD700 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -25,29 +25,52 @@
         }
 
         /* Header */
-        .dashboard-header {
-            background: white;
+        .header {
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            padding: 25px 35px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 25px 40px;
+            margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
             gap: 20px;
-            animation: fadeInDown 0.5s ease-out;
         }
 
-        .header-left h1 {
-            color: #333;
+        .logo {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .header-title h1 {
+            color: #DC143C;
             font-size: 2em;
-            font-weight: 700;
             margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .header-left p {
-            color: #777;
+        .header-title p {
+            color: #666;
             font-size: 0.95em;
         }
 
@@ -57,60 +80,54 @@
             align-items: center;
         }
 
-        .btn-logout {
-            background: #f44336;
-            color: white;
+        .btn {
             padding: 12px 25px;
-            border-radius: 10px;
+            border-radius: 50px;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: bold;
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            cursor: pointer;
+            border: none;
+            font-size: 0.95em;
         }
 
-        .btn-logout:hover {
-            background: #d32f2f;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
-        }
-
-        .btn-home {
-            background: #667eea;
+        .btn-primary {
+            background: linear-gradient(135deg, #DC143C 0%, #FFD700 100%);
             color: white;
-            padding: 12px 25px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-home:hover {
-            background: #5568d3;
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #DC143C;
+            border: 3px solid #DC143C;
+        }
+
+        .btn-secondary:hover {
+            background: #DC143C;
+            color: white;
         }
 
         /* Form Section */
         .form-section {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            padding: 35px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: fadeInUp 0.5s ease-out 0.1s both;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            margin-bottom: 30px;
         }
 
         .form-section h2 {
-            color: #333;
-            font-size: 1.6em;
+            color: #DC143C;
+            font-size: 1.8em;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 3px solid #667eea;
+            border-bottom: 3px solid #FFD700;
         }
 
         .form-grid {
@@ -126,62 +143,60 @@
         }
 
         .form-label {
-            color: #555;
-            font-weight: 500;
+            color: #333;
+            font-weight: 600;
             margin-bottom: 8px;
             font-size: 0.95em;
         }
 
         .form-input,
         .form-textarea {
-            padding: 14px 18px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            padding: 15px 20px;
+            border: 3px solid #FFD700;
+            border-radius: 15px;
             font-size: 15px;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             transition: all 0.3s ease;
+            outline: none;
         }
 
         .form-textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 120px;
         }
 
         .form-input:focus,
         .form-textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            border-color: #DC143C;
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.3);
         }
 
         .btn-submit {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #DC143C 0%, #FFD700 100%);
             color: white;
             padding: 16px 40px;
             border: none;
-            border-radius: 12px;
+            border-radius: 50px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
         }
 
         .btn-submit:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 25px rgba(220, 20, 60, 0.4);
         }
 
         /* Table Section */
         .table-section {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            padding: 35px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: fadeInUp 0.5s ease-out 0.2s both;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
         }
 
         .table-header {
@@ -190,23 +205,24 @@
             align-items: center;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 3px solid #667eea;
+            border-bottom: 3px solid #FFD700;
             flex-wrap: wrap;
             gap: 15px;
         }
 
         .table-header h2 {
-            color: #333;
-            font-size: 1.6em;
+            color: #DC143C;
+            font-size: 1.8em;
         }
 
         .table-count {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #DC143C 0%, #FFD700 100%);
             color: white;
             padding: 8px 20px;
             border-radius: 25px;
             font-size: 0.9em;
-            font-weight: 500;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
 
         .table-wrapper {
@@ -219,32 +235,33 @@
         }
 
         thead {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #DC143C 0%, #FFD700 100%);
         }
 
         th {
             padding: 16px;
             text-align: left;
             font-weight: 600;
-            color: #333;
+            color: white;
             font-size: 0.95em;
             white-space: nowrap;
         }
 
         td {
             padding: 16px;
-            border-bottom: 1px solid #e0e0e0;
-            color: #555;
+            border-bottom: 2px solid #f0f0e0;
+            color: #333;
             font-size: 0.9em;
         }
 
         tbody tr {
             transition: all 0.3s ease;
+            background: white;
         }
 
         tbody tr:hover {
-            background: #f8f9fa;
-            transform: scale(1.01);
+            background: #fff9e6;
+            transform: translateX(5px);
         }
 
         .no-data {
@@ -256,40 +273,78 @@
         .no-data-icon {
             font-size: 4em;
             margin-bottom: 20px;
-            opacity: 0.5;
         }
 
-        /* Animations */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .no-data h3 {
+            color: #DC143C;
+            font-size: 1.5em;
+            margin-bottom: 10px;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Badge Styles */
+        .date-badge {
+            background: #FFD700;
+            color: #333;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .location-badge {
+            background: #DC143C;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background-color: #e6ffe6;
+            border: 2px solid #28a745;
+            color: #28a745;
+        }
+
+        .alert-error {
+            background-color: #ffe6e6;
+            border: 2px solid #DC143C;
+            color: #DC143C;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .dashboard-header {
+            .header {
                 flex-direction: column;
+                gap: 20px;
                 text-align: center;
             }
 
-            .header-left h1 {
+            .header-left {
+                flex-direction: column;
+            }
+
+            .header-right {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .header-right .btn {
+                width: 100%;
+            }
+
+            .header-title h1 {
                 font-size: 1.6em;
             }
 
@@ -297,90 +352,72 @@
                 grid-template-columns: 1fr;
             }
 
-            th, td {
+            th,
+            td {
                 padding: 12px 8px;
                 font-size: 0.85em;
             }
-        }
 
-        /* Badge Styles */
-        .date-badge {
-            background: #667eea;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 0.85em;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .location-badge {
-            background: #4CAF50;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 0.85em;
-            font-weight: 500;
+            .logo {
+                width: 50px;
+                height: 50px;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Header -->
-        <div class="dashboard-header">
+        <div class="header">
             <div class="header-left">
-                <h1>🎯 Dashboard Admin</h1>
-                <p>Kelola semua kegiatan di Kota Semarang</p>
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Kota Semarang" class="logo">
+                <div class="header-title">
+                    <h1> Dashboard Admin</h1>
+                    <p>Kelola semua kegiatan di Kota Semarang</p>
+                </div>
             </div>
             <div class="header-right">
-                <a href="/" class="btn-home">🏠 Beranda</a>
-                <a href="/logout" class="btn-logout">🚪 Logout</a>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">🏠 Beranda</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-primary">🚪 Logout</a>
             </div>
         </div>
 
-        <!-- Form Tambah Kegiatan -->
+        {% if success %}
+        <div class="alert alert-success">
+            ✓ {{ success }}
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="alert alert-error">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
         <div class="form-section">
             <h2>➕ Tambah Kegiatan Baru</h2>
             <form method="post" action="/tambah">
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label">📝 Nama Kegiatan</label>
-                        <input 
-                            type="text" 
-                            class="form-input" 
-                            name="nama" 
-                            placeholder="Contoh: Festival Semarang Night Carnival"
-                            required
-                        >
+                        <input type="text" class="form-input" name="nama"
+                            placeholder="Contoh: Festival Semarang Night Carnival" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">📅 Tanggal</label>
-                        <input 
-                            type="date" 
-                            class="form-input" 
-                            name="tanggal"
-                            required
-                        >
+                        <input type="date" class="form-input" name="tanggal" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">📍 Lokasi</label>
-                        <input 
-                            type="text" 
-                            class="form-input" 
-                            name="lokasi" 
-                            placeholder="Contoh: Simpang Lima Semarang"
-                            required
-                        >
+                        <input type="text" class="form-input" name="lokasi" placeholder="Contoh: Simpang Lima Semarang"
+                            required>
                     </div>
                 </div>
-                <div class="form-group" style="grid-column: 1/-1;">
+                <div class="form-group">
                     <label class="form-label">📄 Deskripsi</label>
-                    <textarea 
-                        class="form-textarea" 
-                        name="deskripsi" 
-                        placeholder="Jelaskan detail kegiatan..."
-                        required
-                    ></textarea>
+                    <textarea class="form-textarea" name="deskripsi" placeholder="Jelaskan detail kegiatan..."
+                        required></textarea>
                 </div>
                 <button type="submit" class="btn-submit">
                     ✨ Tambahkan Kegiatan
@@ -388,7 +425,6 @@
             </form>
         </div>
 
-        <!-- Tabel Daftar Kegiatan -->
         <div class="table-section">
             <div class="table-header">
                 <h2>📋 Daftar Semua Kegiatan</h2>
@@ -412,11 +448,11 @@
                     <tbody>
                         {% for k in data %}
                         <tr>
-                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ loop.index }}</strong></td>
                             <td><strong>{{ k.nama_kegiatan }}</strong></td>
                             <td>{{ k.deskripsi }}</td>
-                            <td><span class="date-badge">{{ k.tanggal }}</span></td>
-                            <td><span class="location-badge">{{ k.lokasi }}</span></td>
+                            <td><span class="date-badge">📅 {{ k.tanggal }}</span></td>
+                            <td><span class="location-badge">📍 {{ k.lokasi }}</span></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -431,5 +467,20 @@
             {% endif %}
         </div>
     </div>
+
+    <script>
+        // Auto hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 500);
+                }, 5000);
+            });
+        });
+    </script>
 </body>
+
 </html>

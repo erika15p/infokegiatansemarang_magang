@@ -73,7 +73,7 @@ def tambah():
     db = get_db()
     cur = db.cursor()
     cur.execute(
-        "INSERT INTO kegiatan (nama_kegiatan, tanggal, lokasi, deskripsi, calender_event_id) VALUES (%s,%s,%s,%s,%s)",
+        "INSERT INTO kegiatan (nama_kegiatan, tanggal, lokasi, deskripsi, calendar_event_id) VALUES (%s,%s,%s,%s,%s)",
         (nama, tanggal, lokasi, deskripsi, event_id)
     )
     db.commit()
