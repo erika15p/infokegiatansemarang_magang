@@ -14,7 +14,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 @app.route("/")
 def index():
-    keyword = request.args.get("q")  # ambil kata kunci pencarian
+    keyword = request.args.get("q")
 
     db = get_db()
     cur = db.cursor(dictionary=True)
@@ -92,6 +92,51 @@ def tambah():
 
     return redirect("/admin")
 
+@app.route("/update/<int:id>", methods=["POST"])
+def update(id):
+    if "admin" not in session:
+        return redirect("/login")
+
+    nama = request.form.get("nama")
+    tanggal = request.form.get("tanggal")
+    lokasi = request.form.get("lokasi")
+    deskripsi = request.form.get("deskripsi")
+    file = request.files.get("gambar")
+
+    db = get_db()
+    cur = db.cursor()
+
+    if file and file.filename != "":
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        cur.execute("""
+            UPDATE kegiatan
+            SET nama_kegiatan=%s, tanggal=%s, lokasi=%s, deskripsi=%s, gambar=%s
+            WHERE id_kegiatan=%s
+        """, (nama, tanggal, lokasi, deskripsi, filename, id))
+    else:
+        cur.execute("""
+            UPDATE kegiatan
+            SET nama_kegiatan=%s, tanggal=%s, lokasi=%s, deskripsi=%s
+            WHERE id_kegiatan=%s
+        """, (nama, tanggal, lokasi, deskripsi, id))
+
+    db.commit()
+    return redirect("/admin")
+
+@app.route("/hapus/<int:id>", methods=["POST"])
+def hapus(id):
+    if "admin" not in session:
+        return redirect("/login")
+
+    db = get_db()
+    cur = db.cursor()
+    cur.execute("DELETE FROM kegiatan WHERE id_kegiatan=%s", (id,))
+    db.commit()
+
+    return redirect("/admin")
+
 @app.route("/kalender")
 def kalender():
     return render_template("kalender.html")
@@ -122,6 +167,21 @@ def api_kegiatan():
         })
 
     return jsonify(events)
+
+@app.route("/api/kegiatan/<int:id>")
+def get_kegiatan(id):
+    if "admin" not in session:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    db = get_db()
+    cur = db.cursor(dictionary=True)
+    cur.execute("SELECT * FROM kegiatan WHERE id_kegiatan=%s", (id,))
+    data = cur.fetchone()
+
+    if not data:
+        return jsonify({"error": "Data tidak ditemukan"}), 404
+
+    return jsonify(data)
 
 @app.route("/api/list_kegiatan")
 def list_kegiatan():
