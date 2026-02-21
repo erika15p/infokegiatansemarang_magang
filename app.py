@@ -70,6 +70,7 @@ def tambah():
 
     nama = request.form.get("nama")
     tanggal = request.form.get("tanggal")
+    waktu = request.form.get("waktu")
     lokasi = request.form.get("lokasi")
     deskripsi = request.form.get("deskripsi")
 
@@ -85,8 +86,8 @@ def tambah():
     db = get_db()
     cur = db.cursor()
     cur.execute(
-        "INSERT INTO kegiatan (nama_kegiatan, tanggal, lokasi, deskripsi, calendar_event_id, gambar) VALUES (%s,%s,%s,%s,%s,%s)",
-        (nama, tanggal, lokasi, deskripsi, event_id, filename)
+        "INSERT INTO kegiatan (nama_kegiatan, tanggal, waktu, lokasi, deskripsi, calendar_event_id, gambar) VALUES (%s,%s,%s,%s,%s,%s,%s)",
+        (nama, tanggal, waktu, lokasi, deskripsi, event_id, filename)
     )
     db.commit()
 
@@ -100,6 +101,7 @@ def update(id):
     nama = request.form.get("nama")
     tanggal = request.form.get("tanggal")
     lokasi = request.form.get("lokasi")
+    waktu = request.form.get("waktu")
     deskripsi = request.form.get("deskripsi")
     file = request.files.get("gambar")
 
@@ -112,15 +114,15 @@ def update(id):
 
         cur.execute("""
             UPDATE kegiatan
-            SET nama_kegiatan=%s, tanggal=%s, lokasi=%s, deskripsi=%s, gambar=%s
+            SET nama_kegiatan=%s, tanggal=%s, waktu=%s, lokasi=%s, deskripsi=%s, gambar=%s
             WHERE id_kegiatan=%s
-        """, (nama, tanggal, lokasi, deskripsi, filename, id))
+        """, (nama, tanggal, waktu, lokasi, deskripsi, filename, id))
     else:
         cur.execute("""
             UPDATE kegiatan
-            SET nama_kegiatan=%s, tanggal=%s, lokasi=%s, deskripsi=%s
+            SET nama_kegiatan=%s, tanggal=%s, waktu=%s, lokasi=%s, deskripsi=%s
             WHERE id_kegiatan=%s
-        """, (nama, tanggal, lokasi, deskripsi, id))
+        """, (nama, tanggal, waktu, lokasi, deskripsi, id))
 
     db.commit()
     return redirect("/admin")
@@ -147,7 +149,7 @@ def api_kegiatan():
     cur = db.cursor(dictionary=True)
 
     cur.execute("""
-        SELECT id_kegiatan, nama_kegiatan, tanggal, lokasi, deskripsi
+        SELECT id_kegiatan, nama_kegiatan, tanggal, waktu, lokasi, deskripsi
         FROM kegiatan
     """)
 
@@ -158,7 +160,8 @@ def api_kegiatan():
         events.append({
             "id": k["id_kegiatan"],
             "title": k["nama_kegiatan"],
-            "start": str(k["tanggal"]),  # lebih aman daripada strftime
+            "start": str(k["tanggal"]),
+            "time": k["waktu"],
             "extendedProps": {
                 "location": k["lokasi"],
                 "description": k["deskripsi"]
@@ -233,6 +236,7 @@ def sinkron_kalender_ke_db():
         deskripsi = e.get('description', '')
         lokasi = e.get('location', '')
         tanggal = e['start'].get('date')
+        waktu = e['start'].get('time', '')
 
         cur.execute(
             "SELECT id FROM kegiatan WHERE calendar_event_id=%s",
@@ -242,9 +246,9 @@ def sinkron_kalender_ke_db():
         if not cur.fetchone():
             cur.execute(
                 """INSERT INTO kegiatan
-                (nama_kegiatan, tanggal, lokasi, deskripsi, calendar_event_id)
-                VALUES (%s,%s,%s,%s,%s)""",
-                (nama, tanggal, lokasi, deskripsi, event_id)
+                (nama_kegiatan, tanggal, waktu, lokasi, deskripsi, calendar_event_id)
+                VALUES (%s,%s,%s,%s,%s,%s)""",
+                (nama, tanggal, waktu, lokasi, deskripsi, event_id)
             )
             db.commit()
 
