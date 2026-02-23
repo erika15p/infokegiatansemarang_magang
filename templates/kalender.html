@@ -1,50 +1,171 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
   <meta charset="UTF-8">
   <title>Kalender Kegiatan Kota Semarang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 20 px;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #FFD200, #FF4E00);
+      min-height: 100vh;
+    }
+
+    .overlay {
+      background: rgba(255, 255, 255, 0.95);
+      min-height: 100vh;
+      padding-bottom: 50px;
+    }
+
+    .header {
+      text-align: center;
+      padding: 40px 20px 20px 20px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin: 0;
+      background: linear-gradient(to right, #FF4E00, #C40000);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      transition: 0.3s;
+    }
+
+    .container:hover {
+      transform: translateY(-5px);
     }
 
     #calendar {
-      max-width: 900 px;
-      margin: auto;
+      margin-top: 20px;
+    }
+
+    /* Styling event */
+    .fc-event {
+      background: linear-gradient(to right, #FF4E00, #C40000) !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 4px !important;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .fc-event:hover {
+      transform: scale(1.05);
+      transition: 0.2s;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Tombol FullCalendar */
+    .fc-button {
+      background: linear-gradient(to right, #FFD200, #FF4E00) !important;
+      border: none !important;
+      color: white !important;
+      border-radius: 8px !important;
+      padding: 6px 12px !important;
+      font-weight: 500;
+    }
+
+    .fc-button:hover {
+      opacity: 0.85;
+    }
+
+    .tooltip {
+      position: absolute;
+      background: #222;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0;
+      transition: 0.2s;
+      white-space: pre-line;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px;
+        padding: 15px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <h2>Kalender Kegiatan Kota Semarang</h2>
-  <div id="calendar"></div>
+  <div class="overlay">
+
+    <div class="header">
+      <h1>Kalender Kegiatan Kota Semarang</h1>
+    </div>
+
+    <div class="container">
+      <div id="calendar"></div>
+    </div>
+
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      var calendarEl = document.getElementById('calendar');
 
-      var calendar = new FullCalendar.Calendar(calendarEl, {
+      var tooltip = document.getElementById('tooltip');
+
+      var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
         initialView: 'dayGridMonth',
+        height: "auto",
+
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek'
+        },
 
         events: '/api/kegiatan',
 
         eventDidMount: function (info) {
-          info.el.setAttribute(
-            "title",
-            info.event.title + "\n" +
-            info.event.extendedProps.location + "\n" +
-            info.event.extendedProps.description
-          );
+
+          info.el.addEventListener('mouseenter', function (e) {
+            tooltip.innerHTML =
+              "<strong>" + info.event.title + "</strong><br>" +
+              "📍 " + (info.event.extendedProps.location || '-') + "<br>" +
+              "📝 " + (info.event.extendedProps.description || '-');
+
+            tooltip.style.left = e.pageX + 15 + 'px';
+            tooltip.style.top = e.pageY + 15 + 'px';
+            tooltip.style.opacity = 1;
+          });
+
+          info.el.addEventListener('mouseleave', function () {
+            tooltip.style.opacity = 0;
+          });
         },
 
         eventClick: function (info) {
           info.jsEvent.preventDefault();
-
           if (info.event.url) {
             window.location.href = info.event.url;
           }

@@ -7,6 +7,7 @@ import os
 from werkzeug.utils import secure_filename
 from datetime import date, datetime, timedelta
 
+
 app = Flask(__name__)
 app.secret_key = "infokegiatan-secret"
 
@@ -161,12 +162,9 @@ def api_kegiatan():
         events.append({
             "id": k["id_kegiatan"],
             "title": k["nama_kegiatan"],
-            "start": str(k["tanggal"]),
-            "time": k["waktu"],
-            "extendedProps": {
-                "location": k["lokasi"],
-                "description": k["deskripsi"]
-            },
+            "start": k["tanggal"].strftime("%Y-%m-%d"),
+            "location": k["lokasi"],          
+            "description": k["deskripsi"],   
             "url": f"/kegiatan/{k['id_kegiatan']}"
         })
 
