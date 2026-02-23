@@ -5,6 +5,7 @@ from kalender_api import tambah_event as kegiatan
 from kalender_api import ambil_event_kalender
 import os
 from werkzeug.utils import secure_filename
+from datetime import date, datetime, timedelta
 
 app = Flask(__name__)
 app.secret_key = "infokegiatan-secret"
@@ -204,6 +205,14 @@ def list_kegiatan():
         cur.execute("SELECT * FROM kegiatan")
 
     data = cur.fetchall()
+
+    for row in data:
+        for key, value in row.items():
+            if isinstance(value, (date, datetime)):
+                row[key] = value.strftime("%Y-%m-%d")
+            elif isinstance(value, timedelta):
+                row[key] = str(value)
+
     return jsonify(data)
 
 @app.route("/kegiatan/<int:id>")
